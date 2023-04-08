@@ -1,0 +1,13 @@
+version: "3"
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:3000"
+  backend:
+    build: ./backend
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bloggo
