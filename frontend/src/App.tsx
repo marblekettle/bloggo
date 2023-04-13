@@ -93,7 +93,7 @@ function MakePostBox() {
 function Posts() {
 	const [postData, setPostData] = React.useState([])
 	function update() {
-		const fetched = fetch('/api/posts');
+		const fetched = fetch('/api/posts/offset=0&n=5');
 		const result = fetched.then((res) => {
 			if (res.status === 200)
 				return res.json()

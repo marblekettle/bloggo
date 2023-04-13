@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity({orderBy: {id: 'DESC'}})
 export class PostEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
@@ -8,6 +8,6 @@ export class PostEntity {
 	author: string;
 	@Column('text')
 	text: string;
-	@Column('date')
+	@Column('timestamptz')
 	date: Date
 }

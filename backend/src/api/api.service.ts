@@ -25,7 +25,6 @@ export class ApiService {
 		topost.text = text;
 		topost.date = new Date();
 		const posted = await this.postRepo.insert(topost);
-		console.log({posted});
 		return({posted});
 	}
 
@@ -34,9 +33,9 @@ export class ApiService {
 		return (post.affected == 1);
 	}
 
-	async getPosts(): Promise<Array<Object>> {
-		const posts = await this.postRepo.find();
-		return (posts.map((p) => this.postToJSON(p)));
+	async getPosts(props: Object): Promise<Array<Object>> {
+		const posts = await this.postRepo.find(props);
+		return (posts.map((p) => this.postToJSON(p)))
 	}
 
 	async getPost(id: number): Promise<Object> {
