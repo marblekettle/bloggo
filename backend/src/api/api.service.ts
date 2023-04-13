@@ -10,6 +10,8 @@ export class ApiService {
 	) {}
 
 	private postToJSON(post: PostEntity): Object {
+		if (!post)
+			return ({});
 		const obj = {
 			id: post.id,
 			author: post.author,
@@ -38,9 +40,9 @@ export class ApiService {
 		return (posts.map((p) => this.postToJSON(p)))
 	}
 
-	async getPost(id: number): Promise<Object> {
+	async getPost(id: number): Promise<Array<Object>> {
 		const post = await this.postRepo.findOneBy({id});
-		return (this.postToJSON(post));
+		return ([this.postToJSON(post)]);
 	}
 }
 

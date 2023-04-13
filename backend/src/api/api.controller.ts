@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Delete, HttpStatus, Req, Res, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, HttpStatus,
+	Req, Res, Param, Query } from '@nestjs/common';
 import { ApiService } from './api.service';
 import { Request, Response } from 'express';
 
@@ -27,6 +28,37 @@ export class ApiController {
 	}
 
 	@Get('/posts')
+	async getPosts(@Query('id') id: any, @Query('offset') offset: any,
+		@Query('n') n: any, @Res() response: Response) {
+		let posts: any = null;
+		if (id && !offset && !n && !isNaN(id))
+			posts = await this.apiService.getPost(parseInt(id));
+		else if (!id) {
+			let params: Array<number> = [-1, -1];
+			if (offset) {
+				if (!isNaN(offset))
+					params[0] = parseInt(offset);
+			} else 
+				params[0] = 0;
+			if (n) {
+				if (!isNaN(n))
+					params[1] = parseInt(n);
+			} else
+				params[1] = 5;
+			if (params[0] >= 0 && params[1] >= 0) {
+				posts = await this.apiService.getPosts({
+					skip: params[0],
+					take: params[1]
+				});
+			}
+		}
+		console.log(posts);
+		if (posts)
+			return response.status(HttpStatus.OK).json(posts);
+		return response.status(HttpStatus.BAD_REQUEST).json({});
+	}
+
+/*	@Get('/posts')
 	async getPosts(@Res() response: Response) {
 		const posts = await this.apiService.getPosts({
 			take: 100
@@ -61,4 +93,5 @@ export class ApiController {
 		}
 		return response.status(HttpStatus.NOT_FOUND);
 	}
+	*/
 }
