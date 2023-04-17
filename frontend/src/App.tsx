@@ -2,6 +2,9 @@ import { JSONSchema4 } from 'json-schema';
 import React from 'react';
 import './App.css';
 
+const backend_host: string = 'http://' + (process.env.REACT_APP_HOST_BACKEND ?
+	process.env.REACT_APP_HOST_BACKEND : 'localhost') + ':3001';
+
 interface PostProps {
 	id: number;
 	author: string;
@@ -44,7 +47,7 @@ function Post({props}: React.ComponentProps<any>) {
 }
 
 function deletePost(id: number) {
-	const fetched = fetch('/api/deletepost/' + id, {
+	const fetched = fetch(backend_host + '/api/deletepost/' + id, {
 		method: 'DELETE'
 	});
 	console.log(fetched);
@@ -55,7 +58,7 @@ function submitPost(author: string, text: string) {
 		author: author,
 		text: text
 	}
-	const fetched = fetch('/api/newpost', {
+	const fetched = fetch(backend_host + '/api/newpost', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -93,7 +96,7 @@ function MakePostBox() {
 function Posts() {
 	const [postData, setPostData] = React.useState([])
 	function update() {
-		const fetched = fetch('/api/posts/offset=0&n=5');
+		const fetched = fetch(backend_host + '/api/posts');
 		const result = fetched.then((res) => {
 			if (res.status === 200)
 				return res.json()

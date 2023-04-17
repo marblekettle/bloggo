@@ -2,10 +2,15 @@ version: "3"
 services:
   frontend:
     build: ./frontend
+    environment:
+      REACT_APP_HOST_BACKEND: backend
     ports:
       - "8080:3000"
   backend:
     build: ./backend
+    environment:
+      HOST_POSTGRES: postgres
+      HOST_FRONTEND: frontend
   postgres:
     image: postgres:latest
     environment:

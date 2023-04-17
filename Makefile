@@ -13,7 +13,6 @@ docker:
 local: bloggo-frontend bloggo-backend
 	cp -R backend/src/* bloggo-backend/src/
 	cp -R frontend/src/* bloggo-frontend/src/
-	cp frontend/package.json bloggo-frontend/
 
 clean:
 	rm -rf bloggo-frontend

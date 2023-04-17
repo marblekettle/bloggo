@@ -4,7 +4,6 @@ RUN		npm i -g npm
 RUN		npm i -g tar create-react-app
 RUN		npx create-react-app frontend --template typescript
 
-ADD		package.json	/frontend/
 ADD		./src/	/frontend/src/
 
 EXPOSE	3000 3001
