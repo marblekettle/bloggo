@@ -4,10 +4,10 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 export class PostEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
-	@Column()
+	@Column({ nullable: false, default: 'Anon' })
 	author: string;
-	@Column('text')
+	@Column({ nullable: false, default: '' })
 	text: string;
-	@Column('timestamptz')
+	@Column({ nullable: false, type: 'timestamptz', default: new Date()})
 	date: Date
 }
