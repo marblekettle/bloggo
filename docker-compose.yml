@@ -9,8 +9,6 @@ services:
     environment:
       HOST_POSTGRES: postgres
       HOST_FRONTEND: frontend
-    ports:
-      - "3001:3001"
   postgres:
     image: postgres:latest
     environment:

@@ -1,5 +1,6 @@
-import { JSONSchema4 } from 'json-schema';
 import React from 'react';
+import { JSONSchema4 } from 'json-schema';
+import { submitPost, deletePost, getPosts } from './API';
 import './App.css';
 
 interface PostProps {
@@ -43,33 +44,14 @@ function Post({props}: React.ComponentProps<any>) {
 	);
 }
 
-function deletePost(id: number) {
-	const fetched = fetch('/api/deletepost/' + id, {
-		method: 'DELETE'
-	});
-}
-
-function submitPost(author: string, text: string) {
-	const post: JSONSchema4 = {
-		author: author,
-		text: text
-	}
-	const fetched = fetch('/api/newpost', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(post)
-	})
-}
-
 function MakePostBox() {
 	const [author, setAuthor] = React.useState('');
 	const [text, setText] = React.useState('');
 	const submitHandle = (event: any) => {
 		event.preventDefault();
 		submitPost(author, text);
+		setAuthor("");
+		setText("");
 	}
 	return (
 <form onSubmit={submitHandle}>
@@ -89,17 +71,8 @@ function MakePostBox() {
 }
 
 function Posts() {
-	const [postData, setPostData] = React.useState([])
-	function update() {
-		const fetched = fetch('/api/posts');
-		const result = fetched.then((res) => {
-			if (res.status === 200)
-				return res.json()
-			return null;
-		})
-		result.then((post) => setPostData(post));
-	}
-	React.useEffect(update, [postData]);
+	const [postData, setPostData] = React.useState(new Array<JSONSchema4>());
+	React.useEffect(() => getPosts(setPostData), []);
 	if (!postData)
 		return(
 <div className='error'>Loading posts...</div>
@@ -109,8 +82,7 @@ function Posts() {
 <div className='error'>No posts.</div>
 		)
 	else {
-	const posts = (postData as Array<JSONSchema4>)
-		.map((p: any, i: number) => {
+	const posts = postData.map((p: any, i: number) => {
 		const pprops: PostProps = {
 			id: p.id,
 			author: p.author,
