@@ -1,6 +1,6 @@
 import React from 'react';
-import { JSONSchema4 } from 'json-schema';
 import { submitPost, deletePost, getPosts } from './API';
+import { MenuBar } from './MenuBar';
 import './App.css';
 
 interface PostProps {
@@ -44,7 +44,7 @@ function Post({props}: React.ComponentProps<any>) {
 	);
 }
 
-function MakePostBox() {
+function SubmitBox() {
 	const [author, setAuthor] = React.useState('');
 	const [text, setText] = React.useState('');
 	const submitHandle = (event: any) => {
@@ -54,24 +54,26 @@ function MakePostBox() {
 		setText("");
 	}
 	return (
-<form onSubmit={submitHandle}>
-	<label>
-		<h3>Author</h3>
-		<input type='text' id='author' name='author'
-			onChange={(a) => setAuthor(a.target.value)}></input>
-	</label><br/>
-	<label>
-		<h3>Text</h3>
-		<textarea id='text' name='text' rows={8} cols={40}
-			onChange={(t) => setText(t.target.value)}></textarea>
-	</label><br/>
-	<button type='submit'>Submit</button>
-</form>
+<div className='boxy'>
+	<form onSubmit={submitHandle}>
+		<label>
+			<h3>Author</h3>
+			<input type='text' id='author' name='author'
+				onChange={(a) => setAuthor(a.target.value)}></input>
+		</label>
+		<label>
+			<h3>Text</h3>
+			<textarea id='text' name='text' rows={8} cols={40}
+				onChange={(t) => setText(t.target.value)}></textarea>
+		</label>
+		<button type='submit'>Submit</button>
+	</form>
+</div>
 	);
 }
 
 function Posts() {
-	const [postData, setPostData] = React.useState(new Array<JSONSchema4>());
+	const [postData, setPostData] = React.useState(new Array<Object>());
 	React.useEffect(() => getPosts(setPostData), []);
 	if (!postData)
 		return(
@@ -99,11 +101,26 @@ function Posts() {
 }
 
 function App() {
-	return (
+/*	return (
 <>
-<MakePostBox />
+<SubmitBox />
 <br/><br/>
 <Posts />
+</>
+	);*/
+	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
+	const buttons = [{
+		text: "Make a New Post!",
+		func: () => {setShowSubmitBox(true);}
+	},{
+		text: 'Newest Posts',
+		func: () => {}
+	}];
+	return (
+
+<>
+<MenuBar barButtons={buttons}/>
+{showSubmitBox ? <SubmitBox /> : null}
 </>
 	);
 }

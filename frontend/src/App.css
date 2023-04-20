@@ -1,0 +1,36 @@
+* {
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+input, textarea {
+	border: 0px;
+	border-radius: 5px;
+}
+
+.boxy, .boxybutton {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 20px;
+	padding: 20px;
+	border-radius: 20px;
+}
+
+.boxybutton {
+	border: 0px;
+	background-color: #5555aa;
+	color: white;
+	font-size: 20px;
+}
+
+.boxybutton:hover {
+	background-color: #7777cc;
+}
+
+.boxybutton:active {
+	background-color: #9999ee;
+}
+
+.boxy {
+	background-color: #8888dd;
+}
