@@ -1,6 +1,6 @@
 import React from 'react';
 import { submitPost, deletePost, getPosts } from './API';
-import { MenuBar } from './MenuBar';
+import { ButtonBar } from './Buttons';
 import './App.css';
 
 interface PostProps {
@@ -10,41 +10,19 @@ interface PostProps {
 	date: Date;
 }
 
-function Box({text, clicked}: React.ComponentProps<any>) {
-	return(
-<button className='clickbox' onClick={clicked}>{text}</button>
-	);
-}
-
-function DeleteBox({clicked}: React.ComponentProps<any>) {
-	const [conf, setConf] = React.useState(false);
-	if (!conf) {
-		return (
-<Box text={'🗑️'} clicked={() => setConf(true)} />
-		);
-	} else {
-		return (
-<>
-<Box text={'✅'} clicked={() => {clicked(); setConf(false);}}/>
-<Box text={'❎'} clicked={() => setConf(false)}/>
-</>
-		);
-	}
-}
-
 function Post({props}: React.ComponentProps<any>) {
 	const thedate: string = props.date.toDateString()
 		+ " | " + props.date.toLocaleTimeString();
 	return (
-<>
-<h2>{props.author}<DeleteBox clicked={() => deletePost(props.id)}/></h2>
+<div className='boxypost'>
+<h2>{props.author}</h2>
 <h3>Posted on {thedate}</h3>
 <p>{props.text}</p>
-</>
+</div>
 	);
 }
 
-function SubmitBox() {
+function SubmitBox({onClick}: React.ComponentProps<any>) {
 	const [author, setAuthor] = React.useState('');
 	const [text, setText] = React.useState('');
 	const submitHandle = (event: any) => {
@@ -53,8 +31,14 @@ function SubmitBox() {
 		setAuthor("");
 		setText("");
 	}
+	const buttons = [{
+		text: '❎',
+		class: 'tinybutton',
+		func: () => {onClick(false)}
+	}];
 	return (
 <div className='boxy'>
+	<ButtonBar barStyle='tinybuttonbar' barButtons={buttons}/>
 	<form onSubmit={submitHandle}>
 		<label>
 			<h3>Author</h3>
@@ -66,7 +50,7 @@ function SubmitBox() {
 			<textarea id='text' name='text' rows={8} cols={40}
 				onChange={(t) => setText(t.target.value)}></textarea>
 		</label>
-		<button type='submit'>Submit</button>
+		<button className='submitbutton' type='submit'>Submit</button>
 	</form>
 </div>
 	);
@@ -88,7 +72,7 @@ function Posts() {
 		const pprops: PostProps = {
 			id: p.id,
 			author: p.author,
-			text: p.text,
+			text: (p.text.length < 100 ? p.text : p.text.substr(0, 100) + '...'),
 			date: new Date(p.date)
 		}
 		return (
@@ -111,16 +95,19 @@ function App() {
 	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
 	const buttons = [{
 		text: "Make a New Post!",
+		class: 'boxybutton-big',
 		func: () => {setShowSubmitBox(true);}
 	},{
 		text: 'Newest Posts',
+		class: 'boxybutton',
 		func: () => {}
 	}];
 	return (
 
 <>
-<MenuBar barButtons={buttons}/>
-{showSubmitBox ? <SubmitBox /> : null}
+<ButtonBar barStyle={'boxy'} barButtons={buttons}/>
+{showSubmitBox ? <SubmitBox onClick={setShowSubmitBox} /> : null}
+<Posts />
 </>
 	);
 }
