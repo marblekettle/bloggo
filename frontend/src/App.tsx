@@ -5,31 +5,38 @@ import './App.css';
 
 interface PostProps {
 	id: number;
+	title: string;
 	author: string;
 	text: string;
 	date: Date;
 }
 
-function Post({props}: React.ComponentProps<any>) {
+function SmallPost({clicked, props}: React.ComponentProps<any>) {
 	const thedate: string = props.date.toDateString()
 		+ " | " + props.date.toLocaleTimeString();
 	return (
 <div className='boxypost'>
-<h2>{props.author}</h2>
-<h3>Posted on {thedate}</h3>
+<h2 onClick={() => clicked(props.id)}>{props.title}</h2>
+<h3>Posted by {props.author} on {thedate}</h3>
 <p>{props.text}</p>
 </div>
 	);
 }
 
+function SinglePost({postId}: React.ComponentProps<any>) {
+
+}
+
 function SubmitBox({onClick}: React.ComponentProps<any>) {
+	const [title, setTitle] = React.useState('');
 	const [author, setAuthor] = React.useState('');
 	const [text, setText] = React.useState('');
 	const submitHandle = (event: any) => {
 		event.preventDefault();
-		submitPost(author, text);
-		setAuthor("");
-		setText("");
+		submitPost(title, author, text);
+		setTitle('');
+		setAuthor('');
+		setText('');
 	}
 	const buttons = [{
 		text: '❎',
@@ -40,6 +47,11 @@ function SubmitBox({onClick}: React.ComponentProps<any>) {
 <div className='boxy'>
 	<ButtonBar barStyle='tinybuttonbar' barButtons={buttons}/>
 	<form onSubmit={submitHandle}>
+	<label>
+			<h3>Title</h3>
+			<input type='text' id='title' name='title'
+				onChange={(t) => setTitle(t.target.value)}></input>
+		</label>
 		<label>
 			<h3>Author</h3>
 			<input type='text' id='author' name='author'
@@ -56,9 +68,9 @@ function SubmitBox({onClick}: React.ComponentProps<any>) {
 	);
 }
 
-function Posts() {
+function Posts({clicked}: React.ComponentProps<any>) {
 	const [postData, setPostData] = React.useState(new Array<Object>());
-	React.useEffect(() => getPosts(setPostData), []);
+	React.useEffect(() => getPosts(setPostData, ''), []);
 	if (!postData)
 		return(
 <div className='error'>Loading posts...</div>
@@ -71,12 +83,13 @@ function Posts() {
 	const posts = postData.map((p: any, i: number) => {
 		const pprops: PostProps = {
 			id: p.id,
+			title: p.title,
 			author: p.author,
 			text: (p.text.length < 100 ? p.text : p.text.substr(0, 100) + '...'),
 			date: new Date(p.date)
 		}
 		return (
-<Post key={i} props={pprops}/>
+<SmallPost key={i} props={pprops} clicked={clicked}/>
 		);
 	});
 	return (
@@ -85,14 +98,9 @@ function Posts() {
 }
 
 function App() {
-/*	return (
-<>
-<SubmitBox />
-<br/><br/>
-<Posts />
-</>
-	);*/
 	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
+	const [showPosts, setShowPosts] = React.useState('newest');
+	const [postToShow, setPostToShow] = React.useState(-1);
 	const buttons = [{
 		text: "Make a New Post!",
 		class: 'boxybutton-big',
@@ -107,7 +115,10 @@ function App() {
 <>
 <ButtonBar barStyle={'boxy'} barButtons={buttons}/>
 {showSubmitBox ? <SubmitBox onClick={setShowSubmitBox} /> : null}
-<Posts />
+{showPosts == 'newest' ? <Posts clicked={
+	(id) => {setShowPosts('single'); setPostToShow(id)}
+} /> : null}
+{showPosts == 'single' ? <SinglePost postId={postToShow} /> : null}
 </>
 	);
 }

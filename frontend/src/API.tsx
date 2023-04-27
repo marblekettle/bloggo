@@ -7,8 +7,9 @@ export function deletePost(id: number) {
 	console.log(fetched);
 }
 
-export function submitPost(author: string, text: string) {
+export function submitPost(title: string, author: string, text: string	) {
 	const post: JSONSchema4 = {
+		title: title,
 		author: author,
 		text: text
 	}
@@ -23,9 +24,8 @@ export function submitPost(author: string, text: string) {
 	console.log(fetched);
 }
 
-export	function getPosts(setFunction: Function) {
-	//const fetched = fetch('/api/posts');
-	const fetched = fetch('/api/testposts').then((res) => {
+export	function getPosts(setFunction: Function, params: string) {
+	const fetched = fetch('/api/posts' + params).then((res) => {
 		if (res.status === 200)
 			return res.json()
 		return null;
