@@ -4,6 +4,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 export class PostEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
+	@Column({ nullable: false, default: '' })
+	title: string;
 	@Column({ nullable: false, default: 'Anon' })
 	author: string;
 	@Column({ nullable: false, default: '' })

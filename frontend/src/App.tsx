@@ -24,7 +24,9 @@ function SmallPost({clicked, props}: React.ComponentProps<any>) {
 }
 
 function SinglePost({postId}: React.ComponentProps<any>) {
-
+	return (
+<h1>{postId}</h1>
+	);
 }
 
 function SubmitBox({onClick}: React.ComponentProps<any>) {
@@ -37,6 +39,8 @@ function SubmitBox({onClick}: React.ComponentProps<any>) {
 		setTitle('');
 		setAuthor('');
 		setText('');
+		onClick(false);
+		
 	}
 	const buttons = [{
 		text: '❎',
@@ -116,7 +120,7 @@ function App() {
 <ButtonBar barStyle={'boxy'} barButtons={buttons}/>
 {showSubmitBox ? <SubmitBox onClick={setShowSubmitBox} /> : null}
 {showPosts == 'newest' ? <Posts clicked={
-	(id) => {setShowPosts('single'); setPostToShow(id)}
+	(id: number) => {setShowPosts('single'); setPostToShow(id)}
 } /> : null}
 {showPosts == 'single' ? <SinglePost postId={postToShow} /> : null}
 </>

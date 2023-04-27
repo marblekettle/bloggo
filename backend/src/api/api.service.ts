@@ -14,6 +14,7 @@ export class ApiService {
 			return ({});
 		const obj = {
 			id: post.id,
+			title: post.title,
 			author: post.author,
 			text: post.text,
 			date: post.date
@@ -21,8 +22,9 @@ export class ApiService {
 		return (obj);
 	}
 
-	async newPost(author: string, text: string) {
+	async newPost(title: string, author: string, text: string) {
 		const topost = new PostEntity;
+		topost.title = title;
 		topost.author = author;
 		topost.text = text;
 		topost.date = new Date();
