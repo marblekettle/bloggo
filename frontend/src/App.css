@@ -81,12 +81,19 @@ input, textarea {
 	right: 40px;
 }
 
-.boxypost {
+.boxypost, .boxyfullpost {
 	margin: 20px;
 	padding: 20px;
 	border-radius: 20px;
-	width: 400px;
 	background-color: #9999ee;
+}
+
+.boxypost {
+	width: 400px;
+}
+
+.boxyfullpost {
+	width: 760px;
 }
 
 .boxypost h3 {

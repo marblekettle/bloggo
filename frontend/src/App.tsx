@@ -23,9 +23,15 @@ function SmallPost({clicked, props}: React.ComponentProps<any>) {
 	);
 }
 
-function SinglePost({postId}: React.ComponentProps<any>) {
+function SinglePost({props}: React.ComponentProps<any>) {
+	const thedate: string = props.date.toDateString()
+	+ " | " + props.date.toLocaleTimeString();
 	return (
-<h1>{postId}</h1>
+<div className='boxyfullpost'>
+<h1>{props.title}</h1>
+<h3>Posted by {props.author} on {thedate}</h3>
+<p>{props.text}</p>
+</div>
 	);
 }
 
@@ -72,18 +78,30 @@ function SubmitBox({onClick}: React.ComponentProps<any>) {
 	);
 }
 
-function Posts({clicked}: React.ComponentProps<any>) {
+function Posts({params, setParams}: React.ComponentProps<any>) {
 	const [postData, setPostData] = React.useState(new Array<Object>());
-	React.useEffect(() => getPosts(setPostData, ''), []);
+	React.useEffect(() => getPosts(setPostData, params), [params]);
 	if (!postData)
 		return(
 <div className='error'>Loading posts...</div>
 		);
-	if (postData.length === 0)
+	if (postData.length === 0) {
 		return (
 <div className='error'>No posts.</div>
-		)
-	else {
+		);
+	} else if (postData.length === 1) {
+		const p = (postData[0] as PostProps);
+		const props: PostProps = {
+			id: p.id,
+			title: p.title,
+			author: p.author,
+			text: p.text,
+			date: new Date(p.date)
+		}
+		return (
+<div className='postbox'><SinglePost props={props}/></div>
+		);
+	} else {
 	const posts = postData.map((p: any, i: number) => {
 		const pprops: PostProps = {
 			id: p.id,
@@ -93,7 +111,8 @@ function Posts({clicked}: React.ComponentProps<any>) {
 			date: new Date(p.date)
 		}
 		return (
-<SmallPost key={i} props={pprops} clicked={clicked}/>
+<SmallPost key={i} props={pprops} clicked={
+	() => setParams('id=' + pprops.id)}/>
 		);
 	});
 	return (
@@ -103,8 +122,7 @@ function Posts({clicked}: React.ComponentProps<any>) {
 
 function App() {
 	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
-	const [showPosts, setShowPosts] = React.useState('newest');
-	const [postToShow, setPostToShow] = React.useState(-1);
+	const [params, setParams] = React.useState('');
 	const buttons = [{
 		text: "Make a New Post!",
 		class: 'boxybutton-big',
@@ -112,17 +130,14 @@ function App() {
 	},{
 		text: 'Newest Posts',
 		class: 'boxybutton',
-		func: () => {}
+		func: () => {setParams('');}
 	}];
 	return (
 
 <>
 <ButtonBar barStyle={'boxy'} barButtons={buttons}/>
 {showSubmitBox ? <SubmitBox onClick={setShowSubmitBox} /> : null}
-{showPosts == 'newest' ? <Posts clicked={
-	(id: number) => {setShowPosts('single'); setPostToShow(id)}
-} /> : null}
-{showPosts == 'single' ? <SinglePost postId={postToShow} /> : null}
+<Posts params={params} setParams={setParams} />
 </>
 	);
 }

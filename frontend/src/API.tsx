@@ -25,7 +25,7 @@ export function submitPost(title: string, author: string, text: string	) {
 }
 
 export	function getPosts(setFunction: Function, params: string) {
-	const fetched = fetch('/api/posts' + params).then((res) => {
+	const fetched = fetch('/api/posts?' + params).then((res) => {
 		if (res.status === 200)
 			return res.json()
 		return null;
