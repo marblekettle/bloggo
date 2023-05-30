@@ -18,6 +18,7 @@ input, textarea {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	position: relative;
 	margin: 20px;
 	padding: 20px;
 	border-radius: 20px;
@@ -78,10 +79,11 @@ input, textarea {
 
 .tinybuttonbar {
 	position: absolute;
-	right: 40px;
+	right: 20px;
 }
 
 .boxypost, .boxyfullpost {
+	position: relative;
 	margin: 20px;
 	padding: 20px;
 	border-radius: 20px;

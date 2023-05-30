@@ -23,11 +23,29 @@ function SmallPost({clicked, props}: React.ComponentProps<any>) {
 	);
 }
 
-function SinglePost({props}: React.ComponentProps<any>) {
+function SinglePost({props, setParams}: React.ComponentProps<any>) {
+	const initButtons = [{
+		text: '🗑️',
+		class: 'tinybutton',
+		func: () => {setButtons(confirmButtons);}
+	}]
+	const confirmButtons = [{
+		text: '❎',
+		class: 'tinybutton',
+		func: () => {setButtons(initButtons);}
+	},{
+		text: '✅',
+		class: 'tinybutton',
+		func: () => {
+			deletePost(props.id);
+			setParams('');
+	}}]
+	const [buttons, setButtons] = React.useState(initButtons);
 	const thedate: string = props.date.toDateString()
 	+ " | " + props.date.toLocaleTimeString();
 	return (
 <div className='boxyfullpost'>
+<ButtonBar barStyle='tinybuttonbar' barButtons={buttons}/>
 <h1>{props.title}</h1>
 <h3>Posted by {props.author} on {thedate}</h3>
 <p>{props.text}</p>
@@ -51,7 +69,7 @@ function SubmitBox({onClick}: React.ComponentProps<any>) {
 	const buttons = [{
 		text: '❎',
 		class: 'tinybutton',
-		func: () => {onClick(false)}
+		func: () => {onClick();}
 	}];
 	return (
 <div className='boxy'>
@@ -99,7 +117,8 @@ function Posts({params, setParams}: React.ComponentProps<any>) {
 			date: new Date(p.date)
 		}
 		return (
-<div className='postbox'><SinglePost props={props}/></div>
+<div className='postbox'><SinglePost props={props}
+	setParams={setParams}/></div>
 		);
 	} else {
 	const posts = postData.map((p: any, i: number) => {
@@ -123,6 +142,9 @@ function Posts({params, setParams}: React.ComponentProps<any>) {
 function App() {
 	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
 	const [params, setParams] = React.useState('');
+	function update() {
+		setParams('');
+	}
 	const buttons = [{
 		text: "Make a New Post!",
 		class: 'boxybutton-big',
@@ -130,13 +152,16 @@ function App() {
 	},{
 		text: 'Newest Posts',
 		class: 'boxybutton',
-		func: () => {setParams('');}
+		func: () => {update();}
 	}];
 	return (
 
 <>
 <ButtonBar barStyle={'boxy'} barButtons={buttons}/>
-{showSubmitBox ? <SubmitBox onClick={setShowSubmitBox} /> : null}
+{showSubmitBox ? <SubmitBox onClick={() => {
+	setShowSubmitBox(false);
+	update();
+}} /> : null}
 <Posts params={params} setParams={setParams} />
 </>
 	);
