@@ -13,9 +13,9 @@ function Button({text, styleclass, func}: React.ComponentProps<any>) {
 }
 
 export function ButtonBar({barButtons, barStyle}: React.ComponentProps<any>) {
-	const buttons = barButtons.map((b: ButtonProps) => {
+	const buttons = barButtons.map((b: ButtonProps, k: number) => {
 		return (
-<Button text={b.text} styleclass={b.class} func={b.func}/>
+<Button key={k} text={b.text} styleclass={b.class} func={b.func}/>
 		);
 	});
 	return(

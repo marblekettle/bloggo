@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ApiController } from './api/api.controller';
 import { ApiService } from './api/api.service';
+import { SessionController } from './session/session.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,7 +22,7 @@ const config: PostgresConnectionOptions = {
 @Module({
 	imports: [TypeOrmModule.forFeature([PostEntity]),
 		TypeOrmModule.forRoot(config)],
-	controllers: [AppController, ApiController],
+	controllers: [AppController, ApiController, SessionController],
 	providers: [AppService, ApiService],
 })
 export class AppModule {}

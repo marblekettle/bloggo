@@ -30,9 +30,20 @@ export	function getPosts(setFunction: Function, params: string) {
 			return res.json()
 		return null;
 	});
-	console.log(fetched);
+//	console.log(fetched);
 	if (fetched)
 		fetched.then((p) => setFunction(p));
-	else
-		setFunction(null);
+	setFunction(null);
+}
+
+export	function getVisitorNumber(setFunction: Function) {
+	const fetched = fetch('/api/session').then((res) => {
+		if (res.status === 200)
+			return res.json()
+		return null;
+	});
+//	console.log(fetched);
+	if (fetched)
+		fetched.then((p) => {if (p) {setFunction(p.num)}});
+	setFunction(null);
 }

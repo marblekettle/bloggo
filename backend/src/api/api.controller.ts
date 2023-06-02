@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Delete, HttpStatus,
 	Req, Res, Param, Query } from '@nestjs/common';
 import { ApiService } from './api.service';
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller('/api')
 export class ApiController {
 	constructor(private readonly apiService: ApiService) {}
 
 	@Post('/newpost')
-	newPost(@Req() request: Request, @Res() response: Response) {
+	newPost(@Req() request: FastifyRequest, @Res() response: FastifyReply) {
 		const newpost = {
 			title: request.body['title'],
 			author: request.body['author'],
@@ -21,7 +21,7 @@ export class ApiController {
 	}
 
 	@Delete('/deletepost/:id')
-	async deletePost(@Param('id') id: any, @Res() response: Response) {
+	async deletePost(@Param('id') id: any, @Res() response: FastifyReply) {
 		if (!isNaN(id)){
 			const res: boolean = await this.apiService.deletePost(parseInt(id));
 			if (res)
@@ -31,8 +31,8 @@ export class ApiController {
 	}
 
 	@Get('/testposts')
-	testPosts(@Res() response: Response) {
-		return response.status(HttpStatus.OK).json([{
+	testPosts(@Res() response: FastifyReply) {
+		return response.status(HttpStatus.OK).send([{
 			id: 2,
 			title: "Lorem Ipsum",
 			author: "TestUser",
@@ -53,7 +53,7 @@ export class ApiController {
 
 	@Get('/posts')
 	async getPosts(@Query('id') id: any, @Query('offset') offset: any,
-		@Query('n') n: any, @Res() response: Response) {
+		@Query('n') n: any, @Res() response: FastifyReply) {
 		let posts: any = null;
 		if (id && !offset && !n && !isNaN(id))
 			posts = await this.apiService.getPost(parseInt(id));
@@ -77,7 +77,7 @@ export class ApiController {
 			}
 		}
 		if (posts)
-			return response.status(HttpStatus.OK).json(posts);
-		return response.status(HttpStatus.BAD_REQUEST).json({});
+			return response.status(HttpStatus.OK).send(posts);
+		return response.status(HttpStatus.BAD_REQUEST).send({});
 	}
 }

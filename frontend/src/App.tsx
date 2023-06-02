@@ -1,5 +1,5 @@
 import React from 'react';
-import { submitPost, deletePost, getPosts } from './API';
+import { submitPost, deletePost, getPosts, getVisitorNumber } from './API';
 import { ButtonBar } from './Buttons';
 import './App.css';
 
@@ -139,6 +139,18 @@ function Posts({params, setParams}: React.ComponentProps<any>) {
 	); }
 }
 
+function VisitNum() {
+	const [visitNum, setVisitNum] = React.useState(0);
+	//getVisitorNumber((n: number | null) => setVisitNum("" + n));
+	React.useEffect(() => getVisitorNumber(setVisitNum), []);
+	if (visitNum) {
+		return (
+<h2>{"You are visitor number " + visitNum}</h2>
+		);
+	}
+	return (<></>);
+}
+
 function App() {
 	const [showSubmitBox, setShowSubmitBox] = React.useState(false);
 	const [params, setParams] = React.useState('');
@@ -163,6 +175,7 @@ function App() {
 	update();
 }} /> : null}
 <Posts params={params} setParams={setParams} />
+<VisitNum/>
 </>
 	);
 }
